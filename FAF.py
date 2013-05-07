@@ -2,6 +2,7 @@
 import os
 import sys
 import pprint
+import sh
 from binwalk import Binwalk
 
 # check where we are
@@ -33,47 +34,47 @@ path_to_firmware = raw_input('Enter the path to firmware: ')
 
 def main_Menu():
     print '\n[1] Binwalk Scans\n'
-    print '\n       \n'
+    print '\n[2] Command Line Analysis\n'
     print '\n       \n'
     print '\n       \n'
     print '\n  99) Exit the Firmware Analysis Framework\n'
-
-# main menu
     main_menu_choice = (raw_input('Enter Menu Choice: '))
     return main_menu_choice
 
 
-main_menu_choice = main_Menu()
-# funny
-if main_menu_choice == "hugs":
-    print "Have you given someone a hug today? Remember a hug can change the world."
-    pause = raw_input("\nPlease give someone a hug then press {return} to continue.")
-
-# quit out
-if main_menu_choice == 'exit' or main_menu_choice == "99" or main_menu_choice == "quit":
-    sys.exit()
-
-
-    # load FAF
-if main_menu_choice == '1':
-    print '\n [1]Normal Binwalk Scan'
-    print '\n [2]Filtered Binwalk Scan'
-    sub_menu_choice = (raw_input('Enter Choice: '))
-    if sub_menu_choice == '1':
-        with Binwalk() as bw:
-            pprint.PrettyPrinter().pprint(bw.scan(path_to_firmware))
-    elif sub_menu_choice == '2':
-        binwalk = Binwalk()
-        binwalk.filter.include(raw_input('Enter Filter to search: '))
-        binwalk.scan(path_to_firmware)
-        binwalk.cleanup()
-    else:
-        print "No choices entered going back to main menu!"
-        main_Menu()
-
-
-#load fasttrack
-#if main_menu_choice == '2':
+while 1:
+    main_menu_choice = main_Menu()
+    if main_menu_choice == 'exit' or main_menu_choice == "99" or main_menu_choice == "quit":
+        sys.exit()
+    if main_menu_choice == '1':
+        print '\n [1]Normal Binwalk Scan'
+        print '\n [2]Filtered Binwalk Scan'
+        print '\n [99] Main Menu'
+        sub_menu_choice = (raw_input('Enter Choice: '))
+        if sub_menu_choice == '1':
+            with Binwalk() as bw:
+                pprint.PrettyPrinter().pprint(bw.scan(path_to_firmware))
+                main_Menu()
+        elif sub_menu_choice == '2':
+            with Binwalk() as binwalk:
+                binwalk.filter.include(raw_input('Enter Filter to search: '))
+                print (binwalk.scan(path_to_firmware))
+                main_Menu()
+        elif sub_menu_choice == '99':
+            main_Menu()
+            print "No choices entered going back to main menu!"
+            main_Menu()
+    if main_menu_choice == '2':
+        print '\n[1] Basic Analysis: Strings\n'
+        print '\n[2] Grep Analysis\n'
+        sub_menu_choice = (raw_input('Enter Choice: '))
+        if sub_menu_choice == '1':
+            string_to_search = raw_input('What string to search for?')
+            firmware_strings = sh.strings(path_to_firmware)
+            print firmware_strings.splitlines(num = firmware_strings.count(string_to_search))
+        if sub_menu_choice == '2':
+            string_to_search = raw_input('What string to search for?')
+            print os.system("grep --binary-files=text -bi -A 50 " + string_to_search + path_to_firmware)
 
 
 ##third party modules
