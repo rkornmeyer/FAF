@@ -2,7 +2,7 @@
 import os
 import sys
 import pprint
-import sh
+import subprocess
 from binwalk import Binwalk
 
 # check where we are
@@ -35,7 +35,7 @@ path_to_firmware = raw_input('Enter the path to firmware: ')
 def main_Menu():
     print '\n[1] Binwalk Scans\n'
     print '\n[2] Command Line Analysis\n'
-    print '\n       \n'
+    print '\n[3] File System Manipulation\n'
     print '\n       \n'
     print '\n  99) Exit the Firmware Analysis Framework\n'
     main_menu_choice = (raw_input('Enter Menu Choice: '))
@@ -70,15 +70,22 @@ while 1:
         sub_menu_choice = (raw_input('Enter Choice: '))
         if sub_menu_choice == '1':
             string_to_search = raw_input('What string to search for?')
-            firmware_strings = sh.strings(path_to_firmware)
-            print firmware_strings.splitlines(num = firmware_strings.count(string_to_search))
+            subprocess.call("strings -8 " + path_to_firmware + " | grep " + string_to_search + " | less", shell=True)
         if sub_menu_choice == '2':
             string_to_search = raw_input('What string to search for?')
-            print os.system("grep --binary-files=text -bi -A 50 " + string_to_search + path_to_firmware)
-
-
+            subprocess.call("grep --binary-files=text -bi " + string_to_search + ' ' + path_to_firmware, shell=True)
 ##third party modules
-#if main_menu_choice == '3':
+if main_menu_choice == '3':
+        print '\n[1] Mod Kit Extraction\n'
+        print '\n[2] Chroot into RootFS\n'
+        sub_menu_choice = (raw_input('Enter Choice: '))
+        if sub_menu_choice == '1':
+
+            subprocess.call()
+
+        if sub_menu_choice == '2':
+            subprocess.call("grep --binary-files=text -bi " + string_to_search + ' ' + path_to_firmware, shell=True)
+
 
 ##update metasploit
 #if main_menu_choice == '4':
