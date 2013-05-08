@@ -8,6 +8,13 @@ The framework at the present point will assume that binwalk,firmware-mod-kit and
 
 https://github.com/rkornmeyer/FAF/blob/master/FAF.py
 
+Credits :
+Major Credit to Craig Heffner at http://www.devttys0.com/ without his firmware mod kit and binwalk, this framework would not work at all.
+Paul Asadoorian for always guiding in the right direction, and his years of wisdom and knowledge in the arena of embedded devices.
+
+
+
+
 Menu
 
 
