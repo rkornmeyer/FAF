@@ -3,6 +3,7 @@ import os
 import sys
 import pprint
 import subprocess
+import shlex
 from binwalk import Binwalk
 
 # check where we are
@@ -29,7 +30,8 @@ print '''
 # main menu
 
 # grab the operating system
-path_to_firmware = raw_input('Enter the path to firmware: ')
+path_to_firmware = (raw_input('Enter the path to firmware: '))
+mod_kit_loc = (raw_input('Where did you extract FMK?'))
 
 
 def main_Menu():
@@ -69,22 +71,25 @@ while 1:
         print '\n[2] Grep Analysis\n'
         sub_menu_choice = (raw_input('Enter Choice: '))
         if sub_menu_choice == '1':
-            string_to_search = raw_input('What string to search for?')
+            string_to_search = (raw_input('What string to search for?'))
             subprocess.call("strings -8 " + path_to_firmware + " | grep " + string_to_search + " | less", shell=True)
         if sub_menu_choice == '2':
-            string_to_search = raw_input('What string to search for?')
+            string_to_search = (raw_input('What string to search for?'))
             subprocess.call("grep --binary-files=text -bi " + string_to_search + ' ' + path_to_firmware, shell=True)
 ##third party modules
-if main_menu_choice == '3':
+    if main_menu_choice == '3':
         print '\n[1] Mod Kit Extraction\n'
         print '\n[2] Chroot into RootFS\n'
         sub_menu_choice = (raw_input('Enter Choice: '))
         if sub_menu_choice == '1':
-
-            subprocess.call()
-
+            os.chdir(mod_kit_loc)
+            subprocess.call("./extract-firmware.sh " + path_to_firmware, shell=True)
         if sub_menu_choice == '2':
-            subprocess.call("grep --binary-files=text -bi " + string_to_search + ' ' + path_to_firmware, shell=True)
+            os.chdir(mod_kit_loc + '/fmk/rootfs/')
+            subprocess.call("cp $(which qemu-mipsel) .", shell=True)
+            os.chdir(mod_kit_loc + '/fmk/rootfs/')
+            process = subprocess.Popen("sudo chroot . ./qemu-mips-static ./bin/ls", stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            process.wait()
 
 
 ##update metasploit
