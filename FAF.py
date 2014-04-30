@@ -6,16 +6,6 @@ import subprocess
 import shlex
 from binwalk import Binwalk
 
-# check where we are
-#if os.path.isdir("/usr/share/setoolkit"):
-#	#if not os.path.isfile("se-toolkit"):
-#		#os.chdir("/usr/share/setoolkit")
-#
-#check where we are and load default directory
-#if os.path.isdir("/usr/share/set"):
-# #   #if not os.path.isfile("se-toolkit"):
-# #      #os.chdir("/usr/share/set")
-#   #     #sys.path.append("/usr/share/set")
 
 
 print '''
